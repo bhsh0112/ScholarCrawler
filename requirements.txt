@@ -1,0 +1,6 @@
+scholarly==1.7.11
+beautifulsoup4>=4.9.3
+requests>=2.25.1
+selenium>=4.0.0
+free-proxy>=1.1.1
+
