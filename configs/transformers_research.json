@@ -13,6 +13,8 @@
     "self-attention"
   ],
   "exclude_keywords": ["survey"],
-  "keyword_mode": "OR"
+  "keyword_mode": "OR",
+  "sort_by": "citations",
+  "sort_order": "desc"
 }
 

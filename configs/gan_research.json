@@ -14,6 +14,8 @@
     "discriminator"
   ],
   "exclude_keywords": ["survey", "review"],
-  "keyword_mode": "OR"
+  "keyword_mode": "OR",
+  "sort_by": "citations",
+  "sort_order": "desc"
 }
 

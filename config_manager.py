@@ -76,6 +76,8 @@ class ConfigManager:
             "additional_keywords": config.additional_keywords,
             "exclude_keywords": config.exclude_keywords,
             "keyword_mode": config.keyword_mode,
+            "sort_by": getattr(config, 'sort_by', 'citations'),
+            "sort_order": getattr(config, 'sort_order', 'desc'),
         }
         
         filepath = os.path.join(self.configs_dir, filename)

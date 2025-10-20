@@ -146,6 +146,10 @@ class AdvancedSearchConfig:
         
         # 文献类型
         self.paper_types = []  # 例如: ["journal", "conference", "book"]
+        
+        # 排序配置
+        self.sort_by = "citations"  # 排序字段: "citations", "year", "title", "relevance"
+        self.sort_order = "desc"    # 排序顺序: "desc" (降序) 或 "asc" (升序)
     
     def to_query_string(self, base_keyword):
         """
@@ -253,6 +257,19 @@ class AdvancedSearchConfig:
         
         if self.exclude_keywords:
             config_str += f"  排除词: {', '.join(self.exclude_keywords)}\n"
+        
+        # 添加排序信息
+        sort_by_cn = {
+            "citations": "引用量",
+            "year": "年份",
+            "title": "标题",
+            "relevance": "相关性"
+        }
+        sort_order_cn = {
+            "desc": "降序",
+            "asc": "升序"
+        }
+        config_str += f"  排序方式: {sort_by_cn.get(self.sort_by, self.sort_by)} ({sort_order_cn.get(self.sort_order, self.sort_order)})\n"
         
         return config_str if len(config_str) > len("高级搜索配置:\n") else "高级搜索配置: 无"
 

@@ -18,6 +18,8 @@
   "venues": [],
   "additional_keywords": [],
   "exclude_keywords": [],
-  "keyword_mode": "OR"
+  "keyword_mode": "OR",
+  "sort_by": "citations",
+  "sort_order": "desc"
 }
 

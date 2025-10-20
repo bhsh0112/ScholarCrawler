@@ -170,9 +170,56 @@ class ScholarCrawler:
         
         return paper_info
     
+    def sort_papers(self, papers: List[Dict], sort_by: str = "citations", 
+                   sort_order: str = "desc") -> List[Dict]:
+        """
+        按指定字段排序文献
+        
+        Args:
+            papers: 文献列表
+            sort_by: 排序字段 ("citations", "year", "title", "relevance")
+            sort_order: 排序顺序 ("desc"降序 或 "asc"升序)
+            
+        Returns:
+            排序后的文献列表
+        """
+        if not papers:
+            return papers
+        
+        reverse = (sort_order == "desc")
+        
+        if sort_by == "citations":
+            # 按引用量排序
+            return sorted(papers, key=lambda x: x.get('citations', 0), reverse=reverse)
+        
+        elif sort_by == "year":
+            # 按年份排序
+            def year_key(paper):
+                year = paper.get('year', 'N/A')
+                if year == 'N/A':
+                    return 0 if reverse else 9999
+                try:
+                    return int(year)
+                except (ValueError, TypeError):
+                    return 0 if reverse else 9999
+            return sorted(papers, key=year_key, reverse=reverse)
+        
+        elif sort_by == "title":
+            # 按标题字母顺序排序
+            return sorted(papers, key=lambda x: x.get('title', '').lower(), reverse=reverse)
+        
+        elif sort_by == "relevance":
+            # 按相关性排序（保持原始顺序，因为Google Scholar已按相关性排序）
+            print("  ℹ️  按相关性排序：保持Google Scholar原始排序")
+            return papers
+        
+        else:
+            print(f"  ⚠️  未知排序字段 '{sort_by}'，使用引用量排序")
+            return sorted(papers, key=lambda x: x.get('citations', 0), reverse=reverse)
+    
     def sort_by_citations(self, papers: List[Dict], descending=True) -> List[Dict]:
         """
-        按引用量排序
+        按引用量排序（保留向后兼容）
         
         Args:
             papers: 文献列表
@@ -181,7 +228,7 @@ class ScholarCrawler:
         Returns:
             排序后的文献列表
         """
-        return sorted(papers, key=lambda x: x['citations'], reverse=descending)
+        return self.sort_papers(papers, "citations", "desc" if descending else "asc")
     
     def filter_by_citations(self, papers: List[Dict], min_citations: int = 0) -> List[Dict]:
         """
@@ -309,6 +356,12 @@ def main():
     advanced_group.add_argument('--keyword-mode', type=str, default='OR',
                                choices=['OR', 'AND'],
                                help='关键字组合模式 (默认: OR)')
+    advanced_group.add_argument('--sort-by', type=str, default='citations',
+                               choices=['citations', 'year', 'title', 'relevance'],
+                               help='排序字段 (默认: citations)')
+    advanced_group.add_argument('--sort-order', type=str, default='desc',
+                               choices=['desc', 'asc'],
+                               help='排序顺序: desc=降序, asc=升序 (默认: desc)')
     advanced_group.add_argument('--config', type=str, default=None,
                                help='从JSON配置文件加载高级检索配置')
     
@@ -343,7 +396,8 @@ def main():
         args.authors, args.year_start, args.year_end,
         args.publishers, args.venues, args.exclude,
         args.additional_keywords, args.min_citations > 0,
-        args.max_citations
+        args.max_citations, args.sort_by != 'citations',
+        args.sort_order != 'desc'
     ])
     
     if has_advanced_params:
@@ -373,6 +427,8 @@ def main():
             if args.additional_keywords:
                 advanced_config.additional_keywords = [k.strip() for k in args.additional_keywords.split(',')]
             advanced_config.keyword_mode = args.keyword_mode
+            advanced_config.sort_by = args.sort_by
+            advanced_config.sort_order = args.sort_order
     
     # 创建爬虫实例
     crawler = ScholarCrawler(use_proxy=args.proxy)
@@ -385,8 +441,13 @@ def main():
         print("❌ 未获取到任何文献，请检查网络连接或尝试使用 --proxy 参数")
         return
     
-    # 按引用量排序
-    papers = crawler.sort_by_citations(papers)
+    # 排序文献
+    if advanced_config and hasattr(advanced_config, 'sort_by'):
+        print(f"\n📊 排序方式: {advanced_config.sort_by} ({advanced_config.sort_order})")
+        papers = crawler.sort_papers(papers, advanced_config.sort_by, advanced_config.sort_order)
+    else:
+        # 默认按引用量降序排序
+        papers = crawler.sort_by_citations(papers)
     
     # 导出CSV
     crawler.export_to_csv(papers, args.output, args.keyword)

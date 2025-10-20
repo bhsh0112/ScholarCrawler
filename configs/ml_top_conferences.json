@@ -16,6 +16,8 @@
   ],
   "additional_keywords": [],
   "exclude_keywords": ["survey", "review"],
-  "keyword_mode": "OR"
+  "keyword_mode": "OR",
+  "sort_by": "year",
+  "sort_order": "desc"
 }
 
