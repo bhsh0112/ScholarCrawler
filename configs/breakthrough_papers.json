@@ -1,0 +1,14 @@
+{
+  "description": "突破性论文配置（近5年高引用>=500）",
+  "year_start": 2019,
+  "year_end": null,
+  "citations_min": 500,
+  "citations_max": null,
+  "authors": [],
+  "publishers": [],
+  "venues": [],
+  "additional_keywords": [],
+  "exclude_keywords": ["survey", "review", "tutorial"],
+  "keyword_mode": "OR"
+}
+

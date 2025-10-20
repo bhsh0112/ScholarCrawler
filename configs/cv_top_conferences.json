@@ -1,0 +1,21 @@
+{
+  "description": "计算机视觉顶会配置（CVPR, ICCV, ECCV）",
+  "year_start": 2020,
+  "year_end": null,
+  "citations_min": 30,
+  "citations_max": null,
+  "authors": [],
+  "publishers": [],
+  "venues": [
+    "CVPR",
+    "Computer Vision and Pattern Recognition",
+    "ICCV",
+    "International Conference on Computer Vision",
+    "ECCV",
+    "European Conference on Computer Vision"
+  ],
+  "additional_keywords": [],
+  "exclude_keywords": ["survey", "review"],
+  "keyword_mode": "OR"
+}
+

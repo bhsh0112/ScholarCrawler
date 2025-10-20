@@ -1,0 +1,21 @@
+{
+  "description": "自然语言处理顶会配置（ACL, EMNLP, NAACL）",
+  "year_start": 2020,
+  "year_end": null,
+  "citations_min": 25,
+  "citations_max": null,
+  "authors": [],
+  "publishers": [],
+  "venues": [
+    "ACL",
+    "Association for Computational Linguistics",
+    "EMNLP",
+    "Empirical Methods in Natural Language Processing",
+    "NAACL",
+    "North American Chapter of the ACL"
+  ],
+  "additional_keywords": [],
+  "exclude_keywords": ["survey", "review"],
+  "keyword_mode": "OR"
+}
+

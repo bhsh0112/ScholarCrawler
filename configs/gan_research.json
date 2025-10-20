@@ -1,0 +1,19 @@
+{
+  "description": "生成对抗网络（GAN）研究配置",
+  "year_start": 2014,
+  "year_end": null,
+  "citations_min": 80,
+  "citations_max": null,
+  "authors": [],
+  "publishers": [],
+  "venues": [],
+  "additional_keywords": [
+    "GAN",
+    "generative adversarial",
+    "generator",
+    "discriminator"
+  ],
+  "exclude_keywords": ["survey", "review"],
+  "keyword_mode": "OR"
+}
+

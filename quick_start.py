@@ -69,9 +69,6 @@ def quick_start():
     max_results = input(f"最大获取文献数量 (默认: {config.DEFAULT_MAX_RESULTS}): ").strip()
     max_results = int(max_results) if max_results.isdigit() else config.DEFAULT_MAX_RESULTS
     
-    min_citations = input(f"最小引用量筛选 (默认: {config.DEFAULT_MIN_CITATIONS}): ").strip()
-    min_citations = int(min_citations) if min_citations.isdigit() else config.DEFAULT_MIN_CITATIONS
-    
     use_proxy = input("是否使用代理? (y/n, 默认: n): ").strip().lower() == 'y'
     
     output_file = input("输出文件名 (默认: 自动生成): ").strip()
@@ -81,15 +78,95 @@ def quick_start():
         safe_keyword = keyword.replace(' ', '_').replace('/', '_')
         output_file = f"{config.OUTPUT_DIR}/{safe_keyword}_{timestamp}.csv"
     
+    # 2.5 高级检索选项
+    print("\n" + "-"*60)
+    print("第三步: 高级检索选项（可选）")
+    print("  1. 使用预设配置（推荐）")
+    print("  2. 自定义高级检索")
+    print("  3. 跳过（使用基础搜索）")
+    
+    advanced_choice = input("\n请选择 (1-3, 默认: 3): ").strip() or '3'
+    
+    advanced_config = None
+    
+    if advanced_choice == '1':
+        # 使用预设配置
+        print("\n预设配置:")
+        print("  1. 最近高影响力文献 (2020年后, 引用>=50)")
+        print("  2. 顶级AI会议 (NeurIPS, ICML, CVPR等)")
+        print("  3. Nature/Science 顶级期刊")
+        
+        preset_choice = input("\n选择预设配置 (1-3): ").strip()
+        
+        if preset_choice == '1':
+            advanced_config = config.create_recent_high_impact_config(2020, 50)
+        elif preset_choice == '2':
+            advanced_config = config.create_top_venue_config(config.TOP_AI_CONFERENCES)
+        elif preset_choice == '3':
+            advanced_config = config.create_top_venue_config(config.TOP_AI_JOURNALS)
+        
+        if advanced_config:
+            print(f"\n✓ 已选择预设配置")
+    
+    elif advanced_choice == '2':
+        # 自定义高级检索
+        advanced_config = config.AdvancedSearchConfig()
+        
+        print("\n自定义高级检索参数（直接回车跳过）:")
+        
+        # 年份范围
+        year_start = input("  起始年份 (如: 2020): ").strip()
+        if year_start.isdigit():
+            advanced_config.year_start = int(year_start)
+        
+        year_end = input("  结束年份 (如: 2023): ").strip()
+        if year_end.isdigit():
+            advanced_config.year_end = int(year_end)
+        
+        # 引用量
+        min_cit = input("  最小引用量 (如: 50): ").strip()
+        if min_cit.isdigit():
+            advanced_config.citations_min = int(min_cit)
+        
+        max_cit = input("  最大引用量 (留空不限): ").strip()
+        if max_cit.isdigit():
+            advanced_config.citations_max = int(max_cit)
+        
+        # 作者
+        authors = input("  作者 (多个用逗号分隔): ").strip()
+        if authors:
+            advanced_config.authors = [a.strip() for a in authors.split(',')]
+        
+        # 会议/期刊
+        venues = input("  会议/期刊 (如: CVPR,NeurIPS): ").strip()
+        if venues:
+            advanced_config.venues = [v.strip() for v in venues.split(',')]
+        
+        # 出版商
+        publishers = input("  出版商 (如: IEEE,ACM): ").strip()
+        if publishers:
+            advanced_config.publishers = [p.strip() for p in publishers.split(',')]
+        
+        # 排除词
+        exclude = input("  排除关键字 (如: survey,review): ").strip()
+        if exclude:
+            advanced_config.exclude_keywords = [e.strip() for e in exclude.split(',')]
+        
+        print("\n✓ 已配置高级检索")
+    
     # 3. 确认信息
     print("\n" + "="*60)
     print("搜索配置确认:")
     print("="*60)
     print(f"  关键字: {keyword}")
     print(f"  最大数量: {max_results}")
-    print(f"  最小引用: {min_citations}")
     print(f"  使用代理: {'是' if use_proxy else '否'}")
     print(f"  输出文件: {output_file}")
+    
+    if advanced_config:
+        print("\n  高级检索:")
+        print(advanced_config)
+    
     print("="*60)
     
     confirm = input("\n确认开始搜索? (y/n): ").strip().lower()
@@ -104,7 +181,8 @@ def quick_start():
     
     try:
         crawler = ScholarCrawler(use_proxy=use_proxy)
-        papers = crawler.search_papers(keyword, max_results=max_results)
+        papers = crawler.search_papers(keyword, max_results=max_results, 
+                                       advanced_config=advanced_config)
         
         if not papers:
             print("❌ 未获取到任何文献")
@@ -112,13 +190,6 @@ def quick_start():
         
         # 排序
         papers = crawler.sort_by_citations(papers)
-        
-        # 筛选
-        if min_citations > 0:
-            papers = crawler.filter_by_citations(papers, min_citations)
-            if not papers:
-                print(f"❌ 没有引用量 >= {min_citations} 的文献")
-                return
         
         # 导出
         crawler.export_to_csv(papers, output_file, keyword)
@@ -229,6 +300,106 @@ def batch_search():
     print(f"📁 所有结果已保存到: {config.OUTPUT_DIR}/ 目录")
 
 
+def advanced_search_wizard():
+    """高级检索向导"""
+    print("""
+╔══════════════════════════════════════════════════════════╗
+║            高级检索向导 🔬                               ║
+╚══════════════════════════════════════════════════════════╝
+""")
+    
+    # 从配置文件加载
+    print("使用预设配置文件或自定义？")
+    print("  1. 加载预设配置文件")
+    print("  2. 自定义配置（保存为文件）")
+    
+    choice = input("\n请选择 (1-2): ").strip()
+    
+    if choice == '1':
+        import os
+        config_dir = "configs"
+        if os.path.exists(config_dir):
+            import glob
+            json_files = glob.glob(f"{config_dir}/*.json")
+            if json_files:
+                print("\n可用的配置文件:")
+                for i, f in enumerate(json_files, 1):
+                    print(f"  {i}. {os.path.basename(f)}")
+                
+                file_choice = input(f"\n选择配置文件 (1-{len(json_files)}): ").strip()
+                try:
+                    config_file = json_files[int(file_choice) - 1]
+                    keyword = input("\n请输入搜索关键字: ").strip()
+                    
+                    # 调用命令行工具
+                    import subprocess
+                    cmd = f'python scholar_crawler.py "{keyword}" --config "{config_file}"'
+                    print(f"\n执行命令: {cmd}\n")
+                    subprocess.call(cmd, shell=True)
+                    return
+                except:
+                    print("❌ 无效选择")
+                    return
+        
+        print("⚠ 未找到配置文件")
+    
+    elif choice == '2':
+        print("\n自定义高级检索配置")
+        print("请按提示输入参数（直接回车跳过）\n")
+        
+        config_dict = {}
+        
+        keyword = input("搜索关键字: ").strip()
+        if not keyword:
+            print("❌ 必须提供关键字")
+            return
+        
+        # 收集参数
+        year_start = input("起始年份 (如: 2020): ").strip()
+        if year_start.isdigit():
+            config_dict['year_start'] = int(year_start)
+        
+        year_end = input("结束年份 (如: 2023): ").strip()
+        if year_end.isdigit():
+            config_dict['year_end'] = int(year_end)
+        
+        min_cit = input("最小引用量: ").strip()
+        if min_cit.isdigit():
+            config_dict['citations_min'] = int(min_cit)
+        
+        authors = input("作者 (逗号分隔): ").strip()
+        if authors:
+            config_dict['authors'] = [a.strip() for a in authors.split(',')]
+        
+        venues = input("会议/期刊 (逗号分隔): ").strip()
+        if venues:
+            config_dict['venues'] = [v.strip() for v in venues.split(',')]
+        
+        # 保存配置
+        save = input("\n是否保存配置到文件? (y/n): ").strip().lower()
+        if save == 'y':
+            import json
+            from datetime import datetime
+            config_name = input("配置文件名 (无需后缀): ").strip() or f"custom_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+            config_file = f"configs/{config_name}.json"
+            
+            import os
+            os.makedirs("configs", exist_ok=True)
+            
+            with open(config_file, 'w', encoding='utf-8') as f:
+                json.dump(config_dict, f, ensure_ascii=False, indent=2)
+            
+            print(f"✓ 配置已保存: {config_file}")
+            
+            # 使用配置搜索
+            execute = input("是否立即使用此配置搜索? (y/n): ").strip().lower()
+            if execute == 'y':
+                import subprocess
+                cmd = f'python scholar_crawler.py "{keyword}" --config "{config_file}"'
+                print(f"\n执行命令: {cmd}\n")
+                subprocess.call(cmd, shell=True)
+
+
 def main():
     """主菜单"""
     while True:
@@ -240,25 +411,30 @@ def main():
 请选择模式:
   1. 快速开始 (单个关键字搜索)
   2. 批量搜索 (多个关键字)
-  3. 查看配置
-  4. 退出
+  3. 高级检索向导 (配置文件管理)
+  4. 查看配置
+  5. 退出
 
 """)
         
-        choice = input("请选择 (1-4): ").strip()
+        choice = input("请选择 (1-5): ").strip()
         
         if choice == '1':
             quick_start()
         elif choice == '2':
             batch_search()
         elif choice == '3':
+            advanced_search_wizard()
+        elif choice == '4':
             print(f"\n当前配置:")
             print(f"  默认搜索数量: {config.DEFAULT_MAX_RESULTS}")
             print(f"  默认最小引用: {config.DEFAULT_MIN_CITATIONS}")
             print(f"  输出目录: {config.OUTPUT_DIR}")
             print(f"  预设关键字总数: {len(config.get_all_keywords())}")
+            print(f"  顶级AI会议: {len(config.TOP_AI_CONFERENCES)} 个")
+            print(f"  顶级AI期刊: {len(config.TOP_AI_JOURNALS)} 个")
             input("\n按回车继续...")
-        elif choice == '4':
+        elif choice == '5':
             print("\n再见! 👋")
             break
         else:

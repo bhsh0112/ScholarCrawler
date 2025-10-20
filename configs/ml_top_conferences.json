@@ -1,0 +1,21 @@
+{
+  "description": "机器学习顶会配置（NeurIPS, ICML, ICLR）",
+  "year_start": 2020,
+  "year_end": null,
+  "citations_min": 40,
+  "citations_max": null,
+  "authors": [],
+  "publishers": [],
+  "venues": [
+    "NeurIPS",
+    "Neural Information Processing Systems",
+    "ICML",
+    "International Conference on Machine Learning",
+    "ICLR",
+    "International Conference on Learning Representations"
+  ],
+  "additional_keywords": [],
+  "exclude_keywords": ["survey", "review"],
+  "keyword_mode": "OR"
+}
+

@@ -1,0 +1,89 @@
+{
+  "_comment": "Google Scholar 高级检索配置示例文件",
+  "_usage": "使用方式: python scholar_crawler.py 'keyword' --config advanced_search_examples.json",
+  
+  "_example_1_recent_high_impact": {
+    "description": "示例1: 搜索2020年以后的高引用文献（引用量>=50）",
+    "year_start": 2020,
+    "year_end": null,
+    "citations_min": 50,
+    "citations_max": null,
+    "authors": [],
+    "publishers": [],
+    "venues": [],
+    "additional_keywords": [],
+    "exclude_keywords": [],
+    "keyword_mode": "OR"
+  },
+  
+  "_example_2_top_venues": {
+    "description": "示例2: 搜索顶级会议（CVPR, ICCV, ECCV）的文献",
+    "year_start": null,
+    "year_end": null,
+    "citations_min": 0,
+    "citations_max": null,
+    "authors": [],
+    "publishers": [],
+    "venues": ["CVPR", "ICCV", "ECCV"],
+    "additional_keywords": [],
+    "exclude_keywords": [],
+    "keyword_mode": "OR"
+  },
+  
+  "_example_3_specific_authors": {
+    "description": "示例3: 搜索特定作者的文献",
+    "year_start": null,
+    "year_end": null,
+    "citations_min": 0,
+    "citations_max": null,
+    "authors": ["Yann LeCun", "Yoshua Bengio", "Geoffrey Hinton"],
+    "publishers": [],
+    "venues": [],
+    "additional_keywords": [],
+    "exclude_keywords": [],
+    "keyword_mode": "OR"
+  },
+  
+  "_example_4_exclude_surveys": {
+    "description": "示例4: 排除综述和教程类文章",
+    "year_start": null,
+    "year_end": null,
+    "citations_min": 0,
+    "citations_max": null,
+    "authors": [],
+    "publishers": [],
+    "venues": [],
+    "additional_keywords": [],
+    "exclude_keywords": ["survey", "review", "tutorial"],
+    "keyword_mode": "OR"
+  },
+  
+  "_example_5_comprehensive": {
+    "description": "示例5: 综合高级检索 - 2021-2023年顶会高引用文献",
+    "year_start": 2021,
+    "year_end": 2023,
+    "citations_min": 100,
+    "citations_max": null,
+    "authors": [],
+    "publishers": [],
+    "venues": ["NeurIPS", "ICML", "ICLR", "CVPR", "ICCV"],
+    "additional_keywords": ["neural", "network"],
+    "exclude_keywords": ["survey", "review"],
+    "keyword_mode": "AND"
+  },
+  
+  "default_config": {
+    "description": "默认配置 - 修改此部分来设置你的高级检索参数",
+    "year_start": null,
+    "year_end": null,
+    "citations_min": 0,
+    "citations_max": null,
+    "authors": [],
+    "publishers": [],
+    "venues": [],
+    "additional_keywords": [],
+    "exclude_keywords": [],
+    "keyword_mode": "OR"
+  }
+}
+

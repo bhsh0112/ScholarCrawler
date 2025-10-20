@@ -1,0 +1,14 @@
+{
+  "description": "最近高影响力文献配置（2020年以后，引用量>=50）",
+  "year_start": 2020,
+  "year_end": null,
+  "citations_min": 50,
+  "citations_max": null,
+  "authors": [],
+  "publishers": [],
+  "venues": [],
+  "additional_keywords": [],
+  "exclude_keywords": ["survey", "review"],
+  "keyword_mode": "OR"
+}
+

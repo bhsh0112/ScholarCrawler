@@ -1,0 +1,25 @@
+{
+  "description": "IEEE和ACM顶级期刊配置",
+  "year_start": 2018,
+  "year_end": null,
+  "citations_min": 20,
+  "citations_max": null,
+  "authors": [],
+  "publishers": [
+    "IEEE",
+    "ACM"
+  ],
+  "venues": [
+    "TPAMI",
+    "IEEE Transactions on Pattern Analysis and Machine Intelligence",
+    "TIP",
+    "IEEE Transactions on Image Processing",
+    "TNNLS",
+    "IEEE Transactions on Neural Networks",
+    "ACM Transactions"
+  ],
+  "additional_keywords": [],
+  "exclude_keywords": [],
+  "keyword_mode": "OR"
+}
+

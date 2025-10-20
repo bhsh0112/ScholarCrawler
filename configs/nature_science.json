@@ -1,0 +1,19 @@
+{
+  "description": "Nature/Science 顶级期刊文献配置",
+  "year_start": 2018,
+  "year_end": null,
+  "citations_min": 30,
+  "citations_max": null,
+  "authors": [],
+  "publishers": [],
+  "venues": [
+    "Nature",
+    "Science",
+    "Nature Machine Intelligence",
+    "Nature Communications"
+  ],
+  "additional_keywords": [],
+  "exclude_keywords": [],
+  "keyword_mode": "OR"
+}
+

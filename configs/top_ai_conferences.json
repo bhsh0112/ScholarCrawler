@@ -1,0 +1,25 @@
+{
+  "description": "顶级AI会议文献配置",
+  "year_start": 2020,
+  "year_end": null,
+  "citations_min": 20,
+  "citations_max": null,
+  "authors": [],
+  "publishers": [],
+  "venues": [
+    "NeurIPS",
+    "ICML", 
+    "ICLR",
+    "AAAI",
+    "IJCAI",
+    "CVPR",
+    "ICCV",
+    "ECCV",
+    "ACL",
+    "EMNLP"
+  ],
+  "additional_keywords": [],
+  "exclude_keywords": [],
+  "keyword_mode": "OR"
+}
+

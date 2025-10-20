@@ -1,0 +1,18 @@
+{
+  "description": "Transformer相关研究配置（2017年后的高引用文献）",
+  "year_start": 2017,
+  "year_end": null,
+  "citations_min": 100,
+  "citations_max": null,
+  "authors": [],
+  "publishers": [],
+  "venues": [],
+  "additional_keywords": [
+    "transformer",
+    "attention mechanism",
+    "self-attention"
+  ],
+  "exclude_keywords": ["survey"],
+  "keyword_mode": "OR"
+}
+

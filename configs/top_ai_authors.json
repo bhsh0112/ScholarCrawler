@@ -1,0 +1,23 @@
+{
+  "description": "顶级AI学者文献配置（图灵奖得主及知名学者）",
+  "year_start": null,
+  "year_end": null,
+  "citations_min": 50,
+  "citations_max": null,
+  "authors": [
+    "Yann LeCun",
+    "Geoffrey Hinton",
+    "Yoshua Bengio",
+    "Andrew Ng",
+    "Ian Goodfellow",
+    "Kaiming He",
+    "Fei-Fei Li",
+    "Jitendra Malik"
+  ],
+  "publishers": [],
+  "venues": [],
+  "additional_keywords": [],
+  "exclude_keywords": [],
+  "keyword_mode": "OR"
+}
+
